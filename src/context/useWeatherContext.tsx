@@ -10,14 +10,17 @@ type WeatherContextProps = {
 };
 
 const weatherContext = createContext({} as WeatherContextProps);
-const api = import.meta.env.VITE_WEATHER_API_KEY;
+const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
 export function WeatherContextProvider({
   children,
 }: WeatherContextProviderPoros) {
   const handlerOnChange = (e: InputEvent) => {
     const value: string = e.target.value;
-    console.log(api);
+
+    const myApi = `http://api.openweathermap.org/geo/1.0/direct?q=${value}&limit=5&appid=${apiKey}`;
+
+    console.log(myApi);
   };
   return (
     <weatherContext.Provider value={{ handlerOnChange }}>
