@@ -1,10 +1,12 @@
+import Search from "./components/Search";
 import Weather from "./components/Weather";
 import { Container } from "react-bootstrap";
 
 function App() {
+  const flag = 0;
   return (
     <Container className="d-flex justify-content-center align-items-center">
-      <Weather />
+      {flag === 0 ? <Search /> : <Weather />}
     </Container>
   );
 }
