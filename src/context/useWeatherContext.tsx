@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useContext } from "react";
+import { getCities } from "../hooks/getCities";
 
 type WeatherContextProviderPoros = {
   children: ReactNode;
@@ -10,17 +11,13 @@ type WeatherContextProps = {
 };
 
 const weatherContext = createContext({} as WeatherContextProps);
-const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
 export function WeatherContextProvider({
   children,
 }: WeatherContextProviderPoros) {
   const handlerOnChange = (e: InputEvent) => {
     const value: string = e.target.value;
-
-    const myApi = `http://api.openweathermap.org/geo/1.0/direct?q=${value}&limit=5&appid=${apiKey}`;
-
-    console.log(myApi);
+    console.log(getCities(value));
   };
   return (
     <weatherContext.Provider value={{ handlerOnChange }}>
