@@ -10,32 +10,36 @@ type ConfigObjProps = {
 
 const useAxios = (configObj: ConfigObjProps) => {
   const { axiosInstance, method, url, requestConfig = {} } = configObj;
-  const [response, setResponse] = useState<any>(null); // Adjust the type accordingly
+  const [response, setResponse] = useState<any>({}); // Adjust the type accordingly
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const controller = new AbortController();
-
   useEffect(() => {
+    // console.log("useEffect executed"); // 添加这行日志
+    let abortController = new AbortController();
     const fetchData = async () => {
       try {
         const res = await axiosInstance[method](url, {
           ...requestConfig,
-          signal: controller.signal,
+          signal: abortController.signal,
         });
-        console.log(res);
+        console.log(res.data);
         setResponse(res.data);
       } catch (error: any) {
-        console.log(error.message);
-        setErr(error.message);
+        if (error.name === "AbortError") {
+          setErr(error.message);
+          throw error;
+        }
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
 
-    // useEffect cleanup function
-    return () => controller.abort();
+    fetchData();
+    return () => {
+      abortController.abort();
+      console.log("useEffect cleanup"); // 添加这行日志
+    };
   }, []);
 
   return [response, err, loading];
