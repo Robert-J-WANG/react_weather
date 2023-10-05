@@ -31,3 +31,8 @@ body {
   backdrop-filter: blur(2.3px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
+.flexCenter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

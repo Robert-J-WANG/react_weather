@@ -1,12 +1,12 @@
 import useAxios from "../hooks/useAxios";
-import axios from "../apis/dadJoke";
+import axios from "../apis/dadJokeApi";
 
 // type Props = {};
 export default function Joke() {
   const [response, err, loading] = useAxios({
     axiosInstance: axios,
     method: "get",
-    // url: "/weather?q=beijing&appid=cdf05d929ed5cfa526764c43d2b832d2", // 不需要包含/api前缀
+    // url: "/data/2.5/weather?q=beijing&appid=cdf05d929ed5cfa526764c43d2b832d2", // 不需要包含/api前缀
     url: "/", // 不需要包含/api前缀
     requestConfig: {
       headers: {
@@ -18,11 +18,24 @@ export default function Joke() {
   });
   console.log(loading, err, response);
   return (
-    <article>
-      {loading && <p>Loading......</p>}
-      {!loading && err && <p>{err}</p>}
-      {!loading && !err && response && <div>{response.joke}</div>}
-      {!loading && !err && !response && <div>no any dad jokes display</div>}
-    </article>
+    <>
+      <main
+        className="flexCenter glassCss flex-column gap-1"
+        style={{
+          width: "50vw",
+          height: "20vh",
+        }}
+      >
+        <h2 className="text-primary">
+          Dad's <span className="text-warning fw-bolder">Joke</span>
+        </h2>
+        <article className="text-success">
+          {loading && <p>Loading......</p>}
+          {!loading && err && <p>{err}</p>}
+          {!loading && !err && response && <div>{response.joke}</div>}
+          {!loading && !err && !response && <div>no any dad jokes display</div>}
+        </article>
+      </main>
+    </>
   );
 }
