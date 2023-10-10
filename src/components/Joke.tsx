@@ -24,8 +24,8 @@ export default function Joke() {
         className="flexCenter glassCss flex-column gap-1"
         style={{
           position: "relative",
-          width: "50vw",
-          height: "20vh",
+          width: "60vw",
+          height: "25vh",
         }}
       >
         <h2 className="text-primary">
@@ -41,8 +41,10 @@ export default function Joke() {
           onClick={() => refetch()}
           style={{
             position: "absolute",
-            top: "9vh",
+            top: "7vh",
             right: "-100px",
+            height: "5vw",
+            borderRadius: "50%",
           }}
         >
           get joke
