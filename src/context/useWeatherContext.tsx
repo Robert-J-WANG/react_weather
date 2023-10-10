@@ -1,36 +1,48 @@
-import { ReactNode, createContext, useContext, useState } from "react";
-import useAxios from "../hooks/useAxios";
-import axios from "../apis/openWeatherApi";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import axios from "axios";
 const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
 type WeatherContextProviderPoros = {
   children: ReactNode;
 };
 type InputEvent = React.ChangeEvent<HTMLInputElement>;
-
 type WeatherContextProps = {
   handlerOnChange: (e: InputEvent) => void;
-  data: any; // Replace 'any' with the actual type of your API response data
-  // loading: boolean;
+  names: string[];
 };
+type WeatherData = {
+  name: string; // Add more properties as needed
+};
+
 const weatherContext = createContext({} as WeatherContextProps);
 
 export function WeatherContextProvider({
   children,
 }: WeatherContextProviderPoros) {
-  const [data, setData] = useState(null);
+  const [value, setValue] = useState("london");
+  const [searchData, setSearchData] = useState<WeatherData[]>([]); // Specify the type here
+  const names: string[] = searchData.map((item) => item.name);
+  const myApi = `http://api.openweathermap.org/geo/1.0/direct?q=${value}&limit=5&appid=${apiKey}`;
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axios.get<WeatherData[]>(myApi);
+      setSearchData(res.data);
+    };
+    fetchData();
+  }, [value]);
+
   const handlerOnChange = (e: InputEvent) => {
-    console.log(e.target.value);
-    const [response, error, loading, fetchData] = useAxios({
-      axiosInstance: axios, // Use your axios instance here
-      method: "get",
-      url: `/geo/1.0/direct?q=${e.target.value}&limit=5&appid=${apiKey}`, // Update with your API endpoint
-    });
-    setData(response);
+    setValue(e.target.value.trim());
   };
-  console.log(data);
+
   return (
-    <weatherContext.Provider value={{ handlerOnChange, data }}>
+    <weatherContext.Provider value={{ handlerOnChange, names }}>
       {children}
     </weatherContext.Provider>
   );

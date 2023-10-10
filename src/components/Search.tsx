@@ -6,7 +6,9 @@ type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
 export default function Search({}: Props) {
   const flexCenter = "d-flex justify-content-center align-items-center ";
-  const { handlerOnChange } = useWeatherContext();
+  const { handlerOnChange, names } = useWeatherContext();
+  console.log(names);
+
   return (
     <>
       <main
