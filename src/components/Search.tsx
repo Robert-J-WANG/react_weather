@@ -1,18 +1,20 @@
-import { InputGroup, Form, Button } from "react-bootstrap";
+import { InputGroup, Form, Button, ButtonGroup } from "react-bootstrap";
 import { useWeatherContext } from "../context/useWeatherContext";
+import { useRef } from "react";
 
 type Props = {};
+type ButtonEvent = React.MouseEvent<HTMLElement, MouseEvent>;
 type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
 export default function Search({}: Props) {
-  const flexCenter = "d-flex justify-content-center align-items-center ";
-  const { handlerOnChange, names } = useWeatherContext();
-  console.log(names);
+  const iptRef = useRef<HTMLInputElement>(null);
+  const btnGroupRef = useRef<HTMLDivElement>(null);
+  const { handlerOnChange, searchData, getBtnValue } = useWeatherContext();
 
   return (
     <>
       <main
-        className={flexCenter + "glassCss flex-column gap-2"}
+        className="flexCenter glassCss flex-column gap-2"
         style={{
           width: "60vw",
           height: "50vh",
@@ -27,12 +29,13 @@ export default function Search({}: Props) {
         </p>
         <InputGroup className="w-50">
           <Form.Control
+            ref={iptRef}
             placeholder="City name"
             style={{
               fontSize: "20px",
             }}
             onChange={(e: InputEvent) => {
-              handlerOnChange(e);
+              handlerOnChange(e, btnGroupRef);
             }}
           />
           <Button
@@ -44,6 +47,31 @@ export default function Search({}: Props) {
           >
             Search
           </Button>
+          <ButtonGroup
+            ref={btnGroupRef}
+            vertical
+            onClick={(e: ButtonEvent) => {
+              getBtnValue(e, iptRef);
+            }}
+          >
+            {searchData?.map((item, index) => (
+              <Button
+                key={index}
+                variant="light"
+                style={{
+                  width: "30vw",
+                  textAlign: "left",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>{item.name}</span>
+                <span>
+                  {item.state}/{item.country}
+                </span>
+              </Button>
+            ))}
+          </ButtonGroup>
         </InputGroup>
       </main>
     </>
