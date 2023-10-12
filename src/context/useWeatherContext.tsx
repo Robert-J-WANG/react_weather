@@ -10,6 +10,7 @@ import {
 // import useAxios from "../hooks/useAxios";
 const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 import axios from "axios";
+import { getSearchOptions } from "../hooks/getSearchOptions";
 
 type WeatherContextProviderPoros = {
   children: ReactNode;
@@ -19,9 +20,9 @@ type BtnEvent = React.MouseEvent<HTMLElement, MouseEvent>;
 type IptRef = RefObject<HTMLInputElement>;
 type BtnGroupRef = RefObject<HTMLDivElement>;
 type WeatherContextProps = {
-  handlerOnChange: (e: InputEvent, btnGroupRef: BtnGroupRef) => void;
-  searchData: WeatherData[];
-  value: string;
+  onInputChange: (e: InputEvent, btnGroupRef: BtnGroupRef) => void;
+  options: WeatherData[];
+  term: string;
   getBtnValue: (e: BtnEvent, iptRef: IptRef) => void;
 };
 type WeatherData = {
@@ -36,10 +37,13 @@ const weatherContext = createContext({} as WeatherContextProps);
 export function WeatherContextProvider({
   children,
 }: WeatherContextProviderPoros) {
-  const [value, setValue] = useState(" ");
-  const [searchData, setSearchData] = useState<WeatherData[]>([]); // Specify the type here
-  const myApi = `http://api.openweathermap.org/geo/1.0/direct?q=${value}&limit=5&appid=${apiKey}`;
+  // input 输入的内容
+  const [term, setTerm] = useState<string>("");
+  // input change时，获取api的数据
+  const [options, setOptions] = useState<WeatherData[]>([]); // Specify the type here
+  // const myApi = `http://api.openweathermap.org/geo/1.0/direct?q=${value}&limit=5&appid=${apiKey}`;
 
+  /* -------------------- 方法1：使用自定义的钩子 -------------------- */
   /* 
    // 使用封装的useAxios
   const myApi = `/geo/1.0/direct?q=${value}&limit=5&appid=${apiKey}`;
@@ -58,26 +62,28 @@ export function WeatherContextProvider({
   }); 
   */
 
-  useEffect(() => {
-    // console.log(value);
-    if (value.trim() !== "") {
-      const fetchData = async () => {
-        const res = await axios.get<WeatherData[]>(myApi);
-        // console.log(res);
-        setSearchData(res.data);
-      };
-      fetchData();
-    }
-  }, [value]);
+  /* ------------------ 方法2 使用useEffect钩子 ----------------- */
+  // useEffect(() => {
+  //   if (term.trim() !== "") {
+  //     const fetchData = async () => {
+  //       const res = await axios.get<WeatherData[]>(myApi);
+  //       // console.log(res);
+  //       setOptions(res.data);
+  //     };
+  //     fetchData();
+  //   }
+  // }, [term]);
 
-  const handlerOnChange = (e: InputEvent, btnGroupRef: BtnGroupRef) => {
-    // console.log(e.target);
+  /* ------------------ 方法3：使用onChange事件 ------------------ */
+
+  const onInputChange = async (e: InputEvent, btnGroupRef: BtnGroupRef) => {
     const currentValue = e.target.value.trim();
-    setValue(currentValue);
-    // if (currentValue.trim() !== "") {
-    //   getWeather();
-    //   setSearchData(response);
-    // }
+    setTerm(currentValue);
+
+    if (currentValue === "") return;
+    const data = await getSearchOptions(currentValue);
+    setOptions(data);
+
     btnGroupRef.current!.style.display = currentValue ? "block" : "none";
   };
 
@@ -92,9 +98,9 @@ export function WeatherContextProvider({
   return (
     <weatherContext.Provider
       value={{
-        handlerOnChange,
-        searchData,
-        value,
+        onInputChange,
+        options,
+        term,
         getBtnValue,
       }}
     >

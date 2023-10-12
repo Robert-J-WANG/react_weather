@@ -9,7 +9,7 @@ type InputEvent = React.ChangeEvent<HTMLInputElement>;
 export default function Search({}: Props) {
   const iptRef = useRef<HTMLInputElement>(null);
   const btnGroupRef = useRef<HTMLDivElement>(null);
-  const { handlerOnChange, searchData, getBtnValue } = useWeatherContext();
+  const { onInputChange, options, getBtnValue } = useWeatherContext();
 
   return (
     <>
@@ -35,7 +35,7 @@ export default function Search({}: Props) {
               fontSize: "20px",
             }}
             onChange={(e: InputEvent) => {
-              handlerOnChange(e, btnGroupRef);
+              onInputChange(e, btnGroupRef);
             }}
           />
           <Button
@@ -54,7 +54,7 @@ export default function Search({}: Props) {
               getBtnValue(e, iptRef);
             }}
           >
-            {searchData?.map((item, index) => (
+            {options?.map((item, index) => (
               <Button
                 key={index}
                 variant="light"
