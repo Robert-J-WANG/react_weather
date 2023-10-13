@@ -1,15 +1,16 @@
 import { InputGroup, Form, Button, ButtonGroup } from "react-bootstrap";
 import { useWeatherContext } from "../context/useWeatherContext";
-import { useRef } from "react";
+// import { useRef } from "react";
 
 type Props = {};
-type ButtonEvent = React.MouseEvent<HTMLElement, MouseEvent>;
+// type ButtonEvent = React.MouseEvent<HTMLElement, MouseEvent>;
 type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
 export default function Search({}: Props) {
-  const iptRef = useRef<HTMLInputElement>(null);
-  const btnGroupRef = useRef<HTMLDivElement>(null);
-  const { onInputChange, options, getBtnValue } = useWeatherContext();
+  // const iptRef = useRef<HTMLInputElement>(null);
+  // const btnGroupRef = useRef<HTMLDivElement>(null);
+  const { onInputChange, options, onOptionSelect, term, onSearch } =
+    useWeatherContext();
 
   return (
     <>
@@ -29,13 +30,14 @@ export default function Search({}: Props) {
         </p>
         <InputGroup className="w-50">
           <Form.Control
-            ref={iptRef}
+            // ref={iptRef}
             placeholder="City name"
             style={{
               fontSize: "20px",
             }}
+            value={term}
             onChange={(e: InputEvent) => {
-              onInputChange(e, btnGroupRef);
+              onInputChange(e);
             }}
           />
           <Button
@@ -44,19 +46,14 @@ export default function Search({}: Props) {
             style={{
               fontSize: "20px",
             }}
+            onClick={onSearch}
           >
             Search
           </Button>
-          <ButtonGroup
-            ref={btnGroupRef}
-            vertical
-            onClick={(e: ButtonEvent) => {
-              getBtnValue(e, iptRef);
-            }}
-          >
-            {options?.map((item, index) => (
+          <ButtonGroup vertical>
+            {options?.map((option, index) => (
               <Button
-                key={index}
+                key={option.id + "-" + index}
                 variant="light"
                 style={{
                   width: "30vw",
@@ -64,10 +61,13 @@ export default function Search({}: Props) {
                   display: "flex",
                   justifyContent: "space-between",
                 }}
+                onClick={() => {
+                  onOptionSelect(option);
+                }}
               >
-                <span>{item.name}</span>
+                <span>{option.name}</span>
                 <span>
-                  {item.state}/{item.country}
+                  {option.state}/{option.country}
                 </span>
               </Button>
             ))}

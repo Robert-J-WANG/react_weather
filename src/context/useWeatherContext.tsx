@@ -1,46 +1,37 @@
 import {
-  ReactNode,
-  RefObject,
   createContext,
   useContext,
   useEffect,
+  // useEffect,
   useState,
 } from "react";
 // import axios from "../apis/openWeatherApi";
 // import useAxios from "../hooks/useAxios";
-const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
-import axios from "axios";
-import { getSearchOptions } from "../hooks/getSearchOptions";
-
-type WeatherContextProviderPoros = {
-  children: ReactNode;
-};
-type InputEvent = React.ChangeEvent<HTMLInputElement>;
-type BtnEvent = React.MouseEvent<HTMLElement, MouseEvent>;
-type IptRef = RefObject<HTMLInputElement>;
-type BtnGroupRef = RefObject<HTMLDivElement>;
-type WeatherContextProps = {
-  onInputChange: (e: InputEvent, btnGroupRef: BtnGroupRef) => void;
-  options: WeatherData[];
-  term: string;
-  getBtnValue: (e: BtnEvent, iptRef: IptRef) => void;
-};
-type WeatherData = {
-  id: number;
-  name: string; // Add more properties as needed
-  state: string; // Add more properties as needed
-  country: string; // Add more properties as needed
-};
+// const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+// import axios from "axios";
+import { getSearchOptions, getForecast } from "../hooks/useWeatherAxios";
+import {
+  OptionProps,
+  WeatherContextProviderPoros,
+  WeatherContextProps,
+  InputEvent,
+  // BtnEvent,
+  // IptRef,
+  // BtnGroupRef,
+} from "../type/index";
 
 const weatherContext = createContext({} as WeatherContextProps);
-
 export function WeatherContextProvider({
   children,
 }: WeatherContextProviderPoros) {
   // input 输入的内容
   const [term, setTerm] = useState<string>("");
   // input change时，获取api的数据
-  const [options, setOptions] = useState<WeatherData[]>([]); // Specify the type here
+  const [options, setOptions] = useState<OptionProps[]>([]); // Specify the type here
+  // click the list button, and store the option to the city value
+  const [city, setCity] = useState<OptionProps | null>(null);
+  const [forecast, setForecast] = useState({});
+
   // const myApi = `http://api.openweathermap.org/geo/1.0/direct?q=${value}&limit=5&appid=${apiKey}`;
 
   /* -------------------- 方法1：使用自定义的钩子 -------------------- */
@@ -76,7 +67,7 @@ export function WeatherContextProvider({
 
   /* ------------------ 方法3：使用onChange事件 ------------------ */
 
-  const onInputChange = async (e: InputEvent, btnGroupRef: BtnGroupRef) => {
+  const onInputChange = async (e: InputEvent) => {
     const currentValue = e.target.value.trim();
     setTerm(currentValue);
 
@@ -84,15 +75,35 @@ export function WeatherContextProvider({
     const data = await getSearchOptions(currentValue);
     setOptions(data);
 
-    btnGroupRef.current!.style.display = currentValue ? "block" : "none";
+    // btnGroupRef.current!.style.display = currentValue ? "block" : "none";
   };
 
-  const getBtnValue = (e: BtnEvent, iptRef: IptRef) => {
-    const target = e.target as HTMLElement; // 类型断言为 HTMLElement
-    if (target.classList.contains("btn")) {
-      iptRef.current!.value = target.children[0].innerHTML;
+  // const onOptionSelect = (e: BtnEvent, iptRef: IptRef) => {
+  //   const target = e.target as HTMLElement; // 类型断言为 HTMLElement
+  //   if (target.classList.contains("btn")) {
+  //     iptRef.current!.value = target.children[0].innerHTML;
+  //   }
+  //   target.parentElement!.style.display = "none";
+  // };
+
+  const onOptionSelect = async (option: OptionProps) => {
+    setCity(option);
+  };
+
+  // 注册监听事件：当city变化时，更新input的value，同时清空options数组
+  useEffect(() => {
+    if (city) {
+      setTerm(city.name);
+      setOptions([]);
     }
-    target.parentElement!.style.display = "none";
+  }, [city]);
+
+  // 点击search按钮，调用api获取天气数据
+  const onSearch = async () => {
+    if (city) {
+      const data = await getForecast(city.lat, city.lon);
+      console.log(data);
+    }
   };
 
   return (
@@ -101,7 +112,9 @@ export function WeatherContextProvider({
         onInputChange,
         options,
         term,
-        getBtnValue,
+        onOptionSelect,
+        onSearch,
+        city,
       }}
     >
       {children}
