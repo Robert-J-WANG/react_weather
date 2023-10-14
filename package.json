@@ -1,5 +1,6 @@
 {
   "name": "react_weather",
+  "homepage": "https://github.com/Robert-J-WANG/react_weather",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +10,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+"deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "axios": "^1.5.1",
