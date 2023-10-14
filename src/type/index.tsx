@@ -8,15 +8,6 @@ export type BtnEvent = React.MouseEvent<HTMLElement, MouseEvent>;
 export type IptRef = RefObject<HTMLInputElement>;
 export type BtnGroupRef = RefObject<HTMLDivElement>;
 
-export type WeatherContextProps = {
-  term: string;
-  options: OptionProps[];
-  city: OptionProps | null;
-  onInputChange: (e: InputEvent) => void;
-  onOptionSelect: (option: OptionProps) => void;
-  onSearch: () => void;
-};
-
 export type OptionProps = {
   id: number;
   name: string;
@@ -26,3 +17,5 @@ export type OptionProps = {
   lon: number;
   // Add more properties as needed
 };
+
+export type ForecastProps = {};

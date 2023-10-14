@@ -5,11 +5,11 @@ import { Container } from "react-bootstrap";
 import { useWeatherContext } from "./context/useWeatherContext";
 
 function App() {
-  const { city } = useWeatherContext();
+  const { forecast } = useWeatherContext();
   return (
     <Container className="flexCenter flex-column gap-5">
-      <Joke />
-      {0 ? <Weather /> : <Search />}
+      {forecast ? null : <Joke />}
+      {forecast ? <Weather /> : <Search />}
     </Container>
   );
 }
