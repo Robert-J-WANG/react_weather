@@ -2,12 +2,10 @@ import useAxios from "../hooks/useAxios";
 import axios from "../apis/dadJokeApi";
 import { Button } from "react-bootstrap";
 
-// type Props = {};
 export default function Joke() {
   const [response, err, loading, refetch] = useAxios({
     axiosInstance: axios,
     method: "get",
-    // url: "/data/2.5/weather?q=beijing&appid=cdf05d929ed5cfa526764c43d2b832d2", // 不需要包含/api前缀
     url: "/", // 不需要包含/api前缀
     requestConfig: {
       headers: {
@@ -17,7 +15,7 @@ export default function Joke() {
       data: {},
     },
   });
-  // console.log(loading, err, response);
+  console.log(loading, err, response);
   return (
     <>
       <main
