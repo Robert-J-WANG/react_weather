@@ -13,7 +13,7 @@ export const getSearchOptions = async (value: string) => {
 };
 
 export const getForecast = async (lat: number, lon: number) => {
-  const myApi = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+  const myApi = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
   try {
     const res = await axios.get(myApi);
     return res.data;

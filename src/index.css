@@ -27,7 +27,7 @@ body {
 .glassCss {
   background: rgba(255, 255, 255, 0.15);
   border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
+  /* border-radius: 24px; */
   backdrop-filter: blur(2.3px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }

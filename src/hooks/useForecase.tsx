@@ -71,7 +71,13 @@ const useForecast = () => {
   const onSearch = async () => {
     if (city) {
       const data = await getForecast(city.lat, city.lon);
-      setForecast(data);
+      // 加工数据
+      const newForecast = {
+        ...data.city,
+        list: data.list.slice(0, 16),
+      };
+      setForecast(newForecast);
+      console.log(newForecast);
     }
   };
   return { onInputChange, options, term, onOptionSelect, onSearch, forecast };

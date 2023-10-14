@@ -18,7 +18,7 @@ export default function Search({}: Props) {
         className="flexCenter glassCss flex-column gap-2"
         style={{
           width: "60vw",
-          height: "50vh",
+          height: "60vh",
         }}
       >
         <h1>
