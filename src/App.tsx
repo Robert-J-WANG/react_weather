@@ -7,7 +7,13 @@ import { useWeatherContext } from "./context/useWeatherContext";
 function App() {
   const { forecast } = useWeatherContext();
   return (
-    <Container className="flexCenter flex-column gap-5">
+    <Container
+      className="flexCenter flex-column gap-5"
+      style={{
+        width: "100%",
+        height: "100vh",
+      }}
+    >
       {forecast ? null : <Joke />}
       {forecast ? <Weather /> : <Search />}
     </Container>

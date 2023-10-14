@@ -4,7 +4,7 @@ body {
   font-weight: 600;
   font-size: 20px;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   color: rgba(255, 255, 255, 0.87);
   background: -webkit-gradient(
       linear,
@@ -18,7 +18,7 @@ body {
 }
 #root {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
